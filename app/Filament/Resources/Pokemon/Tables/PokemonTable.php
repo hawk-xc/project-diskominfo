@@ -2,15 +2,19 @@
 
 namespace App\Filament\Resources\Pokemon\Tables;
 
-use App\Filament\Resources\Pokemon\Columns;
+
+use Filament\Tables\Table;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
-use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
-use Filament\Tables\Table;
+use Filament\Tables\Filters\Filter;
+use App\Filament\Resources\Pokemon\Columns;
+use Filament\Actions\ForceDeleteBulkAction;
+use Illuminate\Database\Eloquent\Builder;
 
 class PokemonTable
 {
@@ -18,18 +22,39 @@ class PokemonTable
     {
         return $table
             ->columns([ 
-                Columns\Text::make('name'),
-                ('name')->sortable()->searchable(),
-                $table->stringColumn('best_experience')->sortable()->searchable(),
-                $table->stringColumn('weight')->sortable()->searchable(),
-                $table->stringColumn('image_path')->sortable()->searchable(),
+                TextColumn::make('name'),
+                TextColumn::make('weight')
             ])
             ->filters([
                 TrashedFilter::make(),
+                Filter::make('weight')
+                    ->form([
+                        \Filament\Forms\Components\Select::make('weight_category')
+                            ->label('Kategori Berat')
+                            ->options([
+                                'light' => 'Light',
+                                'medium' => 'Medium',
+                                'heavy' => 'Heavy',
+                            ])
+                            ->placeholder('Pilih kategori'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(
+                            $data['weight_category'],
+                            function (Builder $query, $category) {
+                                return match ($category) {
+                                    'light' => $query->where('weight', '<', 200),
+                                    'medium' => $query->whereBetween('weight', [201, 300]),
+                                    'heavy' => $query->where('weight', '>', 300),
+                                    default => $query,
+                                };
+                            }
+                        );
+                    }),
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
+                // ViewAction::make(),
+                // EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

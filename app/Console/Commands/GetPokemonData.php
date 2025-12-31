@@ -88,7 +88,7 @@ class GetPokemonData extends Command
                 break;
             }
 
-            if ($response['weight'] < 100) {
+            if (isset($response['weight']) && $response['weight'] < 100) {
                 try {
                     // store pokemon data
                     $new_pokemon = new Pokemon();
