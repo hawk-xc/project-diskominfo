@@ -47,6 +47,7 @@ class GetPokemonData extends Command
         return curl_exec($ch);
     }
 
+
     public function storeImage($imageUrl)
     {
         try {
@@ -88,7 +89,7 @@ class GetPokemonData extends Command
                 break;
             }
 
-            if (isset($response['weight']) && $response['weight'] < 100) {
+            if (isset($response['weight']) && $response['weight'] > 100) {
                 try {
                     // store pokemon data
                     $new_pokemon = new Pokemon();
@@ -100,7 +101,7 @@ class GetPokemonData extends Command
 
                     // search the ability
                     foreach ($response['abilities'] as $ability) {
-                        if ($ability['is_hidden']) {
+                        if (!$ability['is_hidden']) {
                             $dbAbility = Ability::where('name', $ability['ability']['name'])->first();
                             if ($dbAbility) {
                                 $new_pokemon->abilities()->attach($dbAbility->id);
