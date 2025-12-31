@@ -22,8 +22,9 @@ class PokemonTable
     {
         return $table
             ->columns([ 
-                TextColumn::make('name'),
-                TextColumn::make('weight')
+                TextColumn::make('name')->label('Name')->sortable()->searchable(),
+                TextColumn::make('weight')->label('Weight')->sortable(),
+                TextColumn::make('best_experience')->label('Best Experience')->badge()
             ])
             ->filters([
                 TrashedFilter::make(),

@@ -53,9 +53,8 @@
             <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
                 <div class="text-[13px] leading-[20px] flex-1 p-6 pb-12 lg:p-20 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-bl-lg rounded-br-lg lg:rounded-tl-lg lg:rounded-br-none">
                     <h1 class="mb-1 text-2xl">Pokemon Data</h1>
+                    <div class="flex flex-row gap-2">
                     <div class="flex flex-row flex-wrap gap-2">
-                    @foreach ($pokemons as $pokemon)
-                    <a href="/{{$pokemon->id}}">
                         <div class="p-12 rounded-md outline outline-white gap-2 justify-content-between">
                             <img src="http://localhost:9000/pokemondb/{{$pokemon->image_path}}" class="w-[140px]" alt="{{$pokemon->name}}">
                             <h2 class="text-3xl text-orange-300">
@@ -71,8 +70,13 @@
                                 </ul>
                             </article>
                         </div>
-                        </a>
-                    @endforeach
+                    </div>
+                    <div class="px-12">
+                        <ul class="text-xl">
+                            <li>weight: {{$pokemon->weight}}</li>
+                            <li>best experience: {{$pokemon->best_experience}}</li>
+                        </ul>
+                    </div>
                     </div>
                 </div>
             </main>
